@@ -3,14 +3,10 @@ import java.util.*;
 public class ProductManagement {
     Scanner sc = new Scanner(System.in);
     ArrayList<Brand> brands;
-    ArrayList<Phone> phones;
-    ArrayList<Notebook> notebooks;
     ArrayList<Product> products;
 
     public ProductManagement() {
         brands = new ArrayList<>();
-        phones = new ArrayList<>();
-        notebooks = new ArrayList<>();
         products = new ArrayList<>();
 
         initializeBrands();
@@ -30,11 +26,11 @@ public class ProductManagement {
     }
 
     public void initializeProducts() {
-        phones.add(new Phone("Samsung", "Galaxy A51", "128 GB", 6, 6.5, 2000, 5, 3, 4000, "Siyah"));
-        phones.add(new Phone("Xiaomi", "Redmi Note 10", "64 GB", 8, 6.4, 1500, 0, 5, 5000, "Mavi"));
+        products.add(new Phone("Samsung", "Galaxy A51", "128 GB", 6, 6.5, 2000, 5, 3, 4000, "Siyah"));
+        products.add(new Phone("Xiaomi", "Redmi Note 10", "64 GB", 8, 6.4, 1500, 0, 5, 5000, "Mavi"));
 
-        notebooks.add(new Notebook("Apple", "MacBook Air", "512 GB", 8, 14, 5000, 2, 8));
-        notebooks.add(new Notebook("Lenovo", "ThinkPad X1 Carbon", "1 TB", 512, 15, 3000, 1, 12));
+        products.add(new Notebook("Apple", "MacBook Air", "512 GB", 8, 14, 5000, 2, 8));
+        products.add(new Notebook("Lenovo", "ThinkPad X1 Carbon", "1 TB", 512, 15, 3000, 1, 12));
     }
 
     public void displayBrands() {
@@ -45,14 +41,28 @@ public class ProductManagement {
         }
     }
 
+    public void displayAllProducts() {
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+        String format = "| %-3s | %-10s | %-10s | %-20s | %-8s | %-8s | %-8s | %-8s | %-8s | %-8s |\n";
+        System.out.format(format, "KOD", "KATEGORI", "MARKA", "URUN ADI", "FIYAT", "INDIRIM", "HAFIZA", "RAM", "EKRAN", "STOK");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+
+        for (Product product : products) {
+            System.out.format(format, product.getId(), product.getCategory(), product.getBrand(), product.getName(), product.getPrice(), product.getDiscountRate(), product.getMemory(), product.getRam(), product.getScreenSize(), product.getStock());
+        }
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+    }
+
     public void displayPhones() {
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
         String format = "| %-3s | %-10s | %-20s | %-8s | %-8s | %-8s | %-8s | %-8s | %-8s | %-8s | %-8s |\n";
         System.out.format(format, "KOD", "MARKA", "URUN ADI", "FIYAT", "INDIRIM", "DEPOLAMA", "EKRAN", "PIL", "RAM", "RENK", "STOK");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
 
-        for (Phone phone : phones) {
-            System.out.format(format, phone.getId(), phone.getBrand(), phone.getName(), phone.getPrice(), phone.getDiscountRate(), phone.getMemory(), phone.getScreenSize(), phone.getBatteryCapacity(), phone.getRam(), phone.getColor(), phone.getStock());
+        for (Product product : products) {
+            if (product instanceof Phone phone) {
+                System.out.format(format, phone.getId(), phone.getBrand(), phone.getName(), phone.getPrice(), phone.getDiscountRate(), phone.getMemory(), phone.getScreenSize(), phone.getBatteryCapacity(), phone.getRam(), phone.getColor(), phone.getStock());
+            }
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
     }
@@ -63,15 +73,17 @@ public class ProductManagement {
         System.out.format(format, "KOD", "MARKA", "URUN ADI", "FIYAT", "INDIRIM", "HAFIZA", "RAM", "EKRAN", "STOK");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
 
-        for (Notebook notebook : notebooks) {
-            System.out.format(format, notebook.getId(), notebook.getBrand(), notebook.getName(), notebook.getPrice(), notebook.getDiscountRate(), notebook.getMemory(), notebook.getRam(), notebook.getScreenSize(), notebook.getStock());
+        for (Product product : products) {
+            if (product instanceof Notebook notebook) {
+                System.out.format(format, notebook.getId(), notebook.getBrand(), notebook.getName(), notebook.getPrice(), notebook.getDiscountRate(), notebook.getMemory(), notebook.getRam(), notebook.getScreenSize(), notebook.getStock());
+            }
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
     }
 
     public void addBrand(String brandName) {
-        for (Brand brand: brands){
-            if (brand.getName().equalsIgnoreCase(brandName)){
+        for (Brand brand : brands) {
+            if (brand.getName().equalsIgnoreCase(brandName)) {
                 System.out.println("Girdiğiniz marka listede bulunuyor");
                 return;
             }
@@ -114,14 +126,14 @@ public class ProductManagement {
         System.out.print("Ürün rengini giriniz (Örn. Black): ");
         String color = sc.next();
 
-        phones.add(new Phone(brandName, modelName, memory, ram, screen, price, discount, stock, battery, color));
+        products.add(new Phone(brandName, modelName, memory, ram, screen, price, discount, stock, battery, color));
 
         System.out.println(brandName + " Marka " + modelName + " Model telefon stoklara eklendi.\nAna menüye dönmek için herhangi bir tuşa basınız.");
         String leave = sc.next();
     }
 
-    public void deletePhone(int id) {
-        phones.removeIf(phone -> phone.getId() == id);
+    public void deleteProduct(int id) {
+            products.removeIf(product -> product.getId() == id);
     }
 
     public void addNotebook() {
@@ -155,24 +167,28 @@ public class ProductManagement {
         System.out.print("Stok adedi giriniz (Örn. 3): ");
         int stock = sc.nextInt();
 
-        notebooks.add(new Notebook(brandName, modelName, memory, ram, screen, price, discount, stock));
-    }
-
-    public void deleteNotebook(int id) {
-        notebooks.removeIf(notebook -> notebook.getId() == id);
+        products.add(new Notebook(brandName, modelName, memory, ram, screen, price, discount, stock));
     }
 
     public void filterByBrand(String brandName) {
-//        ArrayList<Product> filteredProducts = new ArrayList<>();
-//        for (Product product : pro) {
-//            if (brand.getName().equalsIgnoreCase(brandName)) {
-//                break;
-//            } else {
-//                System.out.println("Markanın ürünü bulunamadı.");
-//                return;
-//            }
-//        }
-
+        ArrayList<Product> filteredProducts = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getBrand().equalsIgnoreCase(brandName)) {
+                filteredProducts.add(product);
+            }
+        }
+        if (filteredProducts.isEmpty()) {
+            System.out.println("Markanın ürünü bulunamadı.");
+        } else {
+            System.out.println("------------------------------------------------------------------------------");
+            String format = "| %-3s | %-10s | %-10s | %-20s | %-8s | %-8s |\n";
+            System.out.format(format, "KOD", "KATEGORI", "MARKA", "URUN ADI", "FIYATI", "STOK");
+            System.out.println("------------------------------------------------------------------------------");
+            for (Product product : filteredProducts) {
+                System.out.format(format, product.getId(), product.getCategory(), product.getBrand(), product.getName(), product.getPrice(), product.getStock());
+            }
+            System.out.println("------------------------------------------------------------------------------");
+        }
 
     }
 }
